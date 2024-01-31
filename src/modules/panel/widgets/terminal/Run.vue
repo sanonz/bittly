@@ -1,7 +1,7 @@
 <template>
   <div ref="terminal" class="terminal" :style="{width:`${widget.sizeWidth}px`,height:`${widget.sizeHeight}px`}">
     <div v-for="(item, index) in contents" :key="index">
-      <pre class="mb-0 content-data">{{item.time | time}} {{item.data}}</pre>
+      <pre class="mb-0 content-data"><time class="time">{{item.time | time}}</time> {{item.data}}</pre>
     </div>
   </div>
 </template>
@@ -60,5 +60,8 @@ export default {
 .content-data {
     word-break: break-all;
     white-space: break-spaces;
+}
+.time {
+    color: #787878;
 }
 </style>
