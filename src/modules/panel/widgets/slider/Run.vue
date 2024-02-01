@@ -13,9 +13,10 @@
 </template>
 <script>
 import WidgetMixin from '../WidgetRunMixin.js' 
+import WidgetRunViewerMixin from '../WidgetRunViewerMixin.js' 
 export default {
     name : 'WidgetSlider',
-    mixins : [WidgetMixin],
+    mixins : [WidgetMixin, WidgetRunViewerMixin],
     data() {
         return {
             value : this.widget.defaultValue*1,
@@ -28,6 +29,24 @@ export default {
         valueGet() {
             return this.value*1;
         },
+
+        /**
+         * get value map
+         * @override
+         */
+        getVariableMap() {
+            let map = {};
+            map[this.widget.targetVariable] = 'content';
+            return map;
+        },
+
+        /**
+         * update widget
+         * @override
+         */
+        updateWidget() {
+            this.value = Number(this.content);
+        }
     },
 }
 </script>

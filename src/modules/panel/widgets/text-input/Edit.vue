@@ -15,6 +15,9 @@
       :widget="widget"
       :actions="['variable','directive','script']"
       defaultAction="directive"
+      :dataSources="['variable','expression','script']"
+      :dataSourceVars="[{name:'sourceVariable',label:$t('panel.dialogWidgetSetting.viewerVariable')}]"
+      :dataSourceExprs="[{name:'sourceExpression',label:$t('panel.dialogWidgetSetting.viewerVariable')}]"
     >
       <!-- size -->
       <a-form-item :label="$t('panel.widgets.textInput.size')">

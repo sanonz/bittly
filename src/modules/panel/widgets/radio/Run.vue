@@ -19,9 +19,10 @@
 </template>
 <script>
 import WidgetRunMixin from '../WidgetRunMixin.js' 
+import WidgetRunViewerMixin from '../WidgetRunViewerMixin.js' 
 export default {
     name : 'WidgetRadio',
-    mixins : [WidgetRunMixin],
+    mixins : [WidgetRunMixin, WidgetRunViewerMixin],
     data() {
         return {
             value : `${this.widget.defaultValue}`,
@@ -34,6 +35,24 @@ export default {
         valueGet() {
             return this.value;
         },
+
+        /**
+         * get value map
+         * @override
+         */
+        getVariableMap() {
+            let map = {};
+            map[this.widget.targetVariable] = 'content';
+            return map;
+        },
+
+        /**
+         * update widget
+         * @override
+         */
+        updateWidget() {
+            this.value = String(this.content);
+        }
     },
 }
 </script>

@@ -23,9 +23,10 @@
 </template>
 <script>
 import WidgetRunMixin from '../WidgetRunMixin.js' 
+import WidgetRunViewerMixin from '../WidgetRunViewerMixin.js' 
 export default {
     name : 'WidgetTextInput',
-    mixins : [WidgetRunMixin],
+    mixins : [WidgetRunMixin, WidgetRunViewerMixin],
     data() {
         return {
             value : '',
@@ -46,6 +47,24 @@ export default {
             if ( 'variable' == this.widget.action ) {
                 this.actionExecute();
             }
+        },
+
+        /**
+         * get value map
+         * @override
+         */
+        getVariableMap() {
+            let map = {};
+            map[this.widget.targetVariable] = 'content';
+            return map;
+        },
+
+        /**
+         * update widget
+         * @override
+         */
+        updateWidget() {
+            this.value = String(this.content);
         }
     },
 }

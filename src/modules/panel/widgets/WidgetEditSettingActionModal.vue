@@ -133,6 +133,70 @@
           </a-form-item>
         </template>
       </template>
+
+      <!-- data source -->
+      <a-form-item v-if="Array.isArray(dataSources)" 
+        :label="$t('panel.editMode.widgetSettingDataSource')"
+        :class="'script' == widget.dataSource ? 'mb-0' : ''"
+      >
+        <a-radio-group ref="radioGroupDataSource" v-model="widget.dataSource" @change="actionForceUpdate">
+          <a-radio 
+            v-for="dataSource in dataSources" 
+            :key="dataSource" 
+            :value="dataSource" 
+            :ref="`radioWidgetDataSources`"
+          >{{$t(`panel.editMode.widgetSettingDataSource${dataSource[0].toUpperCase() + dataSource.substr(1)}`)}}</a-radio>
+        </a-radio-group>
+        
+        <!--- code snippets -->
+        <div class="w-50 d-inline-block" v-if="'script' == widget.dataSource">
+          <a-dropdown :trigger="['click']">
+            <a class="ant-dropdown-link text-muted" @click="e => e.preventDefault()">
+              <span>{{$t('panel.editMode.widgetSettingScriptSnippet')}} <a-icon type="right-circle" /> </span>
+            </a>
+            <a-menu slot="overlay" @click="actionScriptSnippetClick">
+              <a-menu-item v-for="(scriptSnippet,scriptSnippetKey) in scriptSnippets" :key="scriptSnippetKey">
+                <a href="javascript:;">{{$t(`panel.editMode.widgetSettingScriptSnippet${scriptSnippet.name}`)}}</a>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
+          <a-button ref="btnHelpLink" class="text-body ml-2" type="link" 
+            @click="actionOpenScriptHelpLink"
+          >{{$t('directive.script.helpLink')}}</a-button>
+        </div>
+      </a-form-item>
+
+      <!-- data source : variable  -->
+      <template v-if="'variable' == widget.dataSource">
+        <a-form-item v-for="(dataSourceVarItem, dataSourceVarIndex) in dataSourceVars"
+          :key="dataSourceVarIndex" :label="dataSourceVarItem.label"
+        >
+          <variable-selector ref="variableSelector" v-model="widget[dataSourceVarItem.name]"
+            :panel="panel" @change="actionForceUpdate"
+          />
+        </a-form-item>
+      </template>
+
+      <!-- data source : expression  -->
+      <template v-if="'expression' == widget.dataSource">
+        <a-form-item v-for="(dataSourceExprItem, dataSourceExprIndex) in dataSourceExprs"
+          :key="dataSourceExprIndex" :label="dataSourceExprItem.label"
+        >
+          <a-input v-model="widget[dataSourceExprItem.name]"
+            :placeholder="'10 * {{variable}} * 100 / 3'"
+            @change="actionForceUpdate"
+          />
+        </a-form-item>
+      </template>
+
+      <!-- data source : script -->
+      <template v-if="'script' == widget.dataSource">
+        <a-form-item :wrapperCol="{span: 24}">
+          <div style="height:300px;">
+            <code-editor ref="actionCodeEditor" v-model="widget.dataSourceScript" />
+          </div>
+        </a-form-item>
+      </template>
     </a-form>
 
     <template slot="footer">
@@ -185,6 +249,20 @@ export default {
          * @property {MdbPanel}
          */
         panel : Object,
+        /**
+         * name of data sources, data source supports : variable, script, expression
+         * @property {String|String[]|null}
+         */
+        dataSources : {type:[String, Array], default:null},
+        /**
+         * variable map from runtime variable to widget variable
+         * @property {Array}
+         */
+        dataSourceVars : {type:Array, default:null },
+        /**
+         * expressions map for widget variables
+         */
+        dataSourceExprs : {type:Array, default:()=>[]},
         /**
          * enable tooltip editor
          */

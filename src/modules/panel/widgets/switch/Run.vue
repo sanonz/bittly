@@ -15,9 +15,10 @@
 </template>
 <script>
 import WidgetMixin from '../WidgetRunMixin.js' 
+import WidgetRunViewerMixin from '../WidgetRunViewerMixin.js' 
 export default {
     name : 'WidgetSwitch',
-    mixins : [WidgetMixin],
+    mixins : [WidgetMixin, WidgetRunViewerMixin],
     data() {
         return {
             value : this.widget.initStatus,
@@ -32,6 +33,24 @@ export default {
             ? this.widget.valueOn 
             : this.widget.valueOff;
         },
+
+        /**
+         * get value map
+         * @override
+         */
+        getVariableMap() {
+            let map = {};
+            map[this.widget.targetVariable] = 'content';
+            return map;
+        },
+
+        /**
+         * update widget
+         * @override
+         */
+        updateWidget() {
+            this.value = this.content;
+        }
     },
 }
 </script>

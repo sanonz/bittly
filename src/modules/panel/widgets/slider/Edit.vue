@@ -14,6 +14,9 @@
       :widget="widget"
       :actions="['variable','directive','script']"
       defaultAction="directive"
+      :dataSources="['variable','expression','script']"
+      :dataSourceVars="[{name:'sourceVariable',label:$t('panel.dialogWidgetSetting.viewerVariable')}]"
+      :dataSourceExprs="[{name:'sourceExpression',label:$t('panel.dialogWidgetSetting.viewerVariable')}]"
     >
       <a-form-item :label="$t('panel.widgets.slider.direction')">
         <a-radio-group v-model="widget.direction" @change="actionForceUpdate">
